@@ -6,6 +6,7 @@ from aiofiles import open as aiopen
 
 from bot import LOGGER, user_data
 from bot.core.config_manager import Config
+from bot.core.aeon_client import TgClient
 from bot.helper.ext_utils.bot_utils import new_task
 from bot.helper.ext_utils.db_handler import database
 from bot.helper.ext_utils.status_utils import get_readable_time
@@ -80,7 +81,7 @@ async def ping(_, message):
 @new_task
 async def log(_, message):
     buttons = ButtonMaker()
-    buttons.data_button("View log", f"log {message.from_user.id} view")
+    buttons.data_button("View log", f"aeon {message.from_user.id} view")
     reply_message = await send_file(
         message,
         "log.txt",
@@ -91,7 +92,7 @@ async def log(_, message):
 
 
 @new_task
-async def log_callback(_, query):
+async def aeon_callback(_, query):
     message = query.message
     user_id = query.from_user.id
     data = query.data.split()
@@ -129,6 +130,9 @@ async def log_callback(_, query):
             await five_minute_del(reply_message)
         except Exception as err:
             LOGGER.error(f"TG Log Display : {err!s}")
+    elif data[2] == "private":
+        await query.answer(url=f"https://t.me/{TgClient.NAME}?start=private")
+        return None
     else:
         await query.answer()
         await delete_message(message)

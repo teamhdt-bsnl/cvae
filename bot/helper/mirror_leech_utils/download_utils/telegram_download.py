@@ -4,6 +4,7 @@ from time import time
 
 from pyrogram.errors import FloodPremiumWait, FloodWait
 
+from bot.core.aeon_client import TgClient
 from bot import LOGGER, task_dict, task_dict_lock
 from bot.helper.ext_utils.task_manager import (
     check_running_tasks,
@@ -94,10 +95,11 @@ class TelegramDownloadHelper:
 
     async def add_download(self, message, path, session):
         self.session = session
-        """message = await self.session.get_messages(
-            chat_id=message.chat.id,
-            message_ids=message.id,
-        )"""
+        if self.session != TgClient.bot:
+            message = await self.session.get_messages(
+                chat_id=message.chat.id,
+                message_ids=message.id,
+            )
 
         media = (
             message.document
@@ -123,8 +125,7 @@ class TelegramDownloadHelper:
                 else:
                     path = path + self._listener.name
                 self._listener.size = media.file_size
-                gid = token_hex(4)  # media.file_unique_id
-                # test token_hex as gid
+                gid = token_hex(4)
 
                 msg, button = await stop_duplicate_check(self._listener)
                 if msg:
