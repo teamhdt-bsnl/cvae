@@ -1,4 +1,3 @@
-
 import ast
 import os
 from importlib import import_module
@@ -157,26 +156,26 @@ class SystemEnv:
 
         if isinstance(original_value, bool):
             return value.lower() in ("true", "1", "yes")
-    
+
         if isinstance(original_value, int):
             try:
                 return int(value)
             except ValueError:
                 return original_value
-    
+
         if isinstance(original_value, float):
             try:
                 return float(value)
             except ValueError:
                 return original_value
-    
+
         if isinstance(original_value, list):
             return value.split(",")
-    
+
         if isinstance(original_value, dict):
             try:
                 return ast.literal_eval(value)
             except (SyntaxError, ValueError):
                 return original_value
-    
+
         return value
