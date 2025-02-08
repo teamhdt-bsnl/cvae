@@ -79,19 +79,33 @@ class JDownloader(MyJdApi):
                     await rename(
                         f"/JDownloader/{filename}",
                         "/JDownloader/JDownloader.jar",
-                    )
-                    break
-            try:
-                await rmtree("/JDownloader/update")
-                await rmtree("/JDownloader/tmp")
-            except Exception:
-                pass
-        cmd = "java -Xms256m -Xmx500m -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Djava.awt.headless=true -jar /JDownloader/JDownloader.jar"
-        self.is_connected = True
-        _, __, code = await cmd_exec(cmd, shell=True)
-        self.is_connected = False
-        if code != -9:
-            await self.boot()
+                    )  
+                    break  
+            try:  
+                await rmtree("/JDownloader/update")  
+                await rmtree("/JDownloader/tmp")  
+            except Exception:  
+                pass  
 
+        # Modified Java command to use exactly 3 cores
+        cmd = (
+            "taskset -c 0,1,2 "            # Limit to first three CPU cores
+            "nice -n 19 "                  # Set lowest priority
+            "java "
+            "-XX:ActiveProcessorCount=3 "  # Limit Java to use 3 cores
+            "-XX:CICompilerCount=2 "       # Limit JIT compiler threads
+            "-Xms256m "                    # Initial heap size
+            "-Xmx500m "                    # Maximum heap size
+            "-Dsun.jnu.encoding=UTF-8 "
+            "-Dfile.encoding=UTF-8 "
+            "-Djava.awt.headless=true "
+            "-jar /JDownloader/JDownloader.jar"
+        )
+        
+        self.is_connected = True  
+        _, __, code = await cmd_exec(cmd, shell=True)  
+        self.is_connected = False  
+        if code != -9:  
+            await self.boot()
 
 jdownloader = JDownloader()
