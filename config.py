@@ -39,7 +39,7 @@ LEECH_FILENAME_CAPTION = ""
 GDRIVE_ID = "1T3Esef6chJdSlyIoFFlygB7A-UwNpRjp"
 IS_TEAM_DRIVE = True
 STOP_DUPLICATE = True
-INDEX_URL = "https://teamhdt.teamhdt1.workers.dev/0:/mltb"
+INDEX_URL = "https://cvam.teamhdt1.workers.dev/0:/mltb/"
 
 # Rclone
 RCLONE_PATH = ""
@@ -59,12 +59,12 @@ UPSTREAM_BRANCH = "main"
 
 # Leech
 LEECH_SPLIT_SIZE = 0
-AS_DOCUMENT = False
+AS_DOCUMENT = True
 MEDIA_GROUP = False
-USER_TRANSMISSION = False
-MIXED_LEECH = False
+USER_TRANSMISSION = True
+MIXED_LEECH = True
 LEECH_FILENAME_PREFIX = ""
-LEECH_DUMP_CHAT = ""
+LEECH_DUMP_CHAT = "-1001935820049"
 THUMBNAIL_LAYOUT = ""
 
 # qBittorrent/Aria2c
