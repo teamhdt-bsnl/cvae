@@ -111,16 +111,9 @@ class DbManager:
         if self._return:
             return
         data = user_data.get(user_id, {})
-        if data.get("thumb"):
-            del data["thumb"]
-        if data.get("rclone_config"):
-            del data["rclone_config"]
-        if data.get("token_pickle"):
-            del data["token_pickle"]
-        if data.get("token"):
-            del data["token"]
-        if data.get("time"):
-            del data["time"]
+        data = data.copy()
+        for key in ("THUMBNAIL", "RCLONE_CONFIG", "TOKEN_PICKLE", "TOKEN", "TIME"):
+            data.pop(key, None)
         await self.db.users.replace_one({"_id": user_id}, data, upsert=True)
 
     async def update_user_doc(self, user_id, key, path=""):
@@ -190,7 +183,7 @@ class DbManager:
             return
         await self.db.access_token.update_one(
             {"_id": user_id},
-            {"$set": {"token": token, "time": time}},
+            {"$set": {"TOKEN": token, "TIME": time}},
             upsert=True,
         )
 
@@ -199,7 +192,7 @@ class DbManager:
             return
         await self.db.access_token.update_one(
             {"_id": user_id},
-            {"$set": {"token": token}},
+            {"$set": {"TOKEN": token}},
             upsert=True,
         )
 
@@ -208,7 +201,7 @@ class DbManager:
             return None
         user_data = await self.db.access_token.find_one({"_id": user_id})
         if user_data:
-            return user_data.get("time")
+            return user_data.get("TIME")
         return None
 
     async def delete_user_token(self, user_id):
@@ -221,7 +214,7 @@ class DbManager:
             return None
         user_data = await self.db.access_token.find_one({"_id": user_id})
         if user_data:
-            return user_data.get("token")
+            return user_data.get("TOKEN")
         return None
 
     async def delete_all_access_tokens(self):
