@@ -1,12 +1,14 @@
+.venv/*
 config.py
 token.pickle
 rclone.conf
 .netrc
 log.txt
+cfg.zip
 accounts/*
 MediaInfo/*
 Images/*
-Thumbnails/*
+thumbnails/*
 rclone/*
 tokens/*
 list_drives.txt

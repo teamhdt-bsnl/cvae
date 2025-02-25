@@ -60,7 +60,7 @@ class TelegramUploader:
         self._path = path
         self._start_time = time()
         self._total_files = 0
-        self._thumb = self._listener.thumb or f"Thumbnails/{listener.user_id}.jpg"
+        self._thumb = self._listener.thumb or f"thumbnails/{listener.user_id}.jpg"
         self._msgs_dict = {}
         self._corrupted = 0
         self._is_corrupted = False
@@ -97,7 +97,7 @@ class TelegramUploader:
             if "LEECH_FILENAME_PREFIX" not in self._listener.user_dict
             else ""
         )
-        self._user_dump = self._listener.user_dict.get("user_dump")
+        self._user_dump = self._listener.user_dict.get("USER_DUMP")
         self._lcaption = self._listener.user_dict.get("LEECH_FILENAME_CAPTION") or (
             Config.LEECH_FILENAME_CAPTION
             if "LEECH_FILENAME_CAPTION" not in self._listener.user_dict
@@ -161,7 +161,7 @@ class TelegramUploader:
             LOGGER.info(self._up_path)
             await rename(self._up_path, new_path)
             self._up_path = new_path
-            LOGGER.info(self._up_path)  # nxt
+            LOGGER.info(self._up_path)
         if not self._lcaption and not self._lprefix:
             cap_mono = f"<code>{file_}</code>"
         if len(file_) > 60:
@@ -252,9 +252,9 @@ class TelegramUploader:
         if not res:
             return
         for dirpath, _, files in natsorted(await sync_to_async(walk, self._path)):
-            if dirpath.endswith("/yt-dlp-thumb"):
+            if dirpath.strip().endswith("/yt-dlp-thumb"):
                 continue
-            if dirpath.endswith("_ss"):
+            if dirpath.strip().endswith("_ss"):
                 await self._send_screenshots(dirpath, files)
                 await rmtree(dirpath, ignore_errors=True)
                 continue
